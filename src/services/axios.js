@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: "https://rightchoice-vict.onrender.com/",
+    baseURL: "/",
     withCredentials: true,
 });
 
