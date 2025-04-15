@@ -44,7 +44,7 @@ export const NewArrivals = () => {
           <div className="w-full h-full">
             <img
               className="object-cover shadow-2xl object-center rounded-xl h-60 transition-all duration-500 ease-in-out"
-              src={product.image}
+              src={product.image[0]}
               alt={product.name}
             />
             <div className="flex flex-col justify-start items-start ml-2">

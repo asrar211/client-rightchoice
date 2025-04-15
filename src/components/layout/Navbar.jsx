@@ -1,44 +1,60 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  const toggleMenu = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   return (
     <header>
-      {/* Top banner */}
-      {!localStorage.getItem("token") ? (
+      {!isLoggedIn && (
         <div className="bg-black py-2">
-        <Link to="/signup">
-          <p className="text-white font-light text-sm text-center underline cursor-pointer">
-            Sign Up Now
-          </p>
-        </Link>
-      </div>
-      ) : null}
-      
+          <Link to="/signup">
+            <p className="text-white font-light text-sm text-center underline cursor-pointer">
+              Sign Up Now
+            </p>
+          </Link>
+        </div>
+      )}
 
-      {/* Main Navbar */}
       <div className="flex justify-between items-center py-4 px-3 shadow-xl md:px-10 lg:px-20">
-        {/* Left - Menu and Logo */}
         <div className="flex items-center gap-4 md:gap-8">
-          {/* Hamburger Icon - only visible on small screens */}
-          <div className="flex flex-col gap-1 cursor-pointer md:hidden" aria-label="Menu">
+          <div
+            className="flex flex-col gap-1 cursor-pointer md:hidden"
+            aria-label="Menu"
+            onClick={toggleMenu}
+          >
             <span className="w-6 h-[3px] bg-black"></span>
             <span className="w-6 h-[3px] bg-black"></span>
             <span className="w-6 h-[3px] bg-black"></span>
           </div>
 
-          {/* Logo or Title */}
-          <div>
-            <h1 className="text-xl font-bold tracking-widest hidden md:block">Right Choice</h1>
-          </div>
+          <Link to="/">
+            <h1 className="text-xl font-bold tracking-widest">RC</h1>
+          </Link>
         </div>
 
-        {/* Right - Icons */}
         <div className="flex items-center gap-5 md:gap-8 text-xl md:text-2xl">
-          {/* <span className="cursor-pointer" aria-label="Search">🔍</span> */}
           <span className="cursor-pointer" aria-label="Cart">🛒</span>
-          <Link to='/profile'><span className="cursor-pointer" aria-label="Profile">👨🏻</span></Link>
+          <Link to="/profile">
+            <span className="cursor-pointer" aria-label="Profile">👨🏻</span>
+          </Link>
         </div>
       </div>
+
+      {isOpen && (
+        <div className="md:hidden bg-white shadow-md px-4 py-6">
+          <ul className="space-y-4 text-lg">
+            <li><Link to="/" onClick={() => setIsOpen(false)}>Home</Link></li>
+            <li><Link to="/shop" onClick={() => setIsOpen(false)}>Shop</Link></li>
+            {!isLoggedIn && <li><Link to="/signup" onClick={() => setIsOpen(false)}>Sign Up</Link></li>}
+          </ul>
+        </div>
+      )}
     </header>
   );
 };
