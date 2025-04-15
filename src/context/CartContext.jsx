@@ -7,33 +7,35 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch cart on load
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await axios.get("/api/cart");
-        setCart(res.data);
-      } catch (err) {
-        console.error("Failed to fetch cart:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCart = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get("/api/cart");
+      setCart(res.data);
+    } catch (err) {
+      console.error("Failed to fetch cart:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchCart();
   }, []);
 
-  // Add item to cart
   const addToCart = async (item) => {
     try {
-      const res = await axios.post("/api/cart/add", item);
+      const payload = {
+        ...item,
+        quantity: Number(item.quantity) || 1, // Ensure numeric
+      };
+      const res = await axios.post("/api/cart/add", payload);
       setCart(res.data);
     } catch (err) {
       console.error("Add to cart error:", err.message);
     }
   };
 
-  // Remove item
   const removeFromCart = async (productId) => {
     try {
       const res = await axios.delete(`/api/cart/remove/${productId}`);
@@ -43,11 +45,11 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // Clear cart
   const clearCart = async () => {
     try {
       await axios.delete("/api/cart/clear");
-      setCart(prev => ({ ...prev, items: [], total: 0 }));
+      // Re-fetch to get accurate backend total
+      await fetchCart();
     } catch (err) {
       console.error("Clear cart error:", err.message);
     }

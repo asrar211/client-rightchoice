@@ -34,13 +34,13 @@ export const ProductDetails = () => {
       productId: product._id,
       name: product.name,
       price: product.price,
-      quantity,
+      quantity: Number(quantity),
       image: product.image[0],
     });
-    // toast.success("Item added to cart");
-    console.log("added");
-    navigate("/cart")
+  
+    navigate("/cart");
   };
+  
 
   if (!product) return <p className="text-center mt-10">Loading...</p>;
 
