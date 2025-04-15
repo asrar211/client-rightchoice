@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import useCart from "../../hooks/useCart"; 
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
+  const { cart } = useCart(); 
+
+  const uniqueProductCount = cart?.items ? new Set(cart.items.map(item => item.productId)).size : 0;
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
@@ -38,8 +42,17 @@ export const Navbar = () => {
           </Link>
         </div>
 
-        <div className="flex items-center gap-5 md:gap-8 text-xl md:text-2xl">
-          <span className="cursor-pointer" aria-label="Cart">🛒</span>
+        <div className="flex items-center gap-5 md:gap-8 text-xl md:text-2xl relative">
+          {/* Cart Icon with Badge for Unique Product Count */}
+          <Link to="/cart" className="relative">
+            <span className="cursor-pointer" aria-label="Cart">🛒</span>
+            {uniqueProductCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                {uniqueProductCount}
+              </span>
+            )}
+          </Link>
+
           <Link to="/profile">
             <span className="cursor-pointer" aria-label="Profile">👨🏻</span>
           </Link>
