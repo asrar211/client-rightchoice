@@ -9,6 +9,9 @@ export const Products = () => {
   const [showForm, setShowForm] = useState(false)
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [loadingAction, setLoadingAction] = useState(false); // for form and delete loading
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -61,6 +64,7 @@ export const Products = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingAction(true); 
   
     const data = new FormData();
     data.append("name", formData.name);
@@ -91,25 +95,29 @@ export const Products = () => {
         description: "",
         stock: "",
         category: "",
-        image: [],
+        images: [],
       });
       setEditingProductId(null);
       fetchProducts();
       setShowForm(false);
     } catch (error) {
       toast.error("Failed to submit product");
+    } finally {
+      setLoadingAction(false);
     }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
-  
+    setLoadingAction(true);
     try {
       await axios.delete(`/api/products/delete/${id}`);
       toast.success("Product deleted successfully");
       fetchProducts();
     } catch (err) {
       toast.error("Failed to delete product");
+    } finally {
+      setLoadingAction(false);
     }
   };
   
@@ -133,7 +141,7 @@ export const Products = () => {
     <ToastContainer position="top-right" autoClose={3000} />
 
     <AdminDashboard>
-      <div className="m-5">
+      <div className="my-5">
         <div className="flex justify-between items-center mb-5">
           <div>
             <h1 className="text-xl font-semibold">Products</h1>
@@ -141,10 +149,10 @@ export const Products = () => {
           </div>
           <div>
             <button
-              className="bg-blue-500 cursor-pointer text-white p-2 font-semibold rounded-md"
+              className="bg-blue-500 cursor-pointer text-white py-2 px-4 font-semibold rounded-md"
               onClick={() => setShowForm(!showForm)}
             >
-              {showForm ? "Close Form" : "Add Product"}
+              {showForm ? "Close" : "Add"}
             </button>
           </div>
         </div>
@@ -234,39 +242,72 @@ export const Products = () => {
             </div>
 
             <button
-              type="submit"
-              className="bg-green-500 cursor-pointer text-white px-4 py-2 rounded-md font-semibold"
-            >
-              Submit
-            </button>
+  type="submit"
+  className="bg-green-500 cursor-pointer text-white px-4 py-2 rounded-md font-semibold disabled:opacity-60"
+  disabled={loadingAction}
+>
+  {loadingAction ? "Submitting..." : "Submit"}
+</button>
+
           </form>
         )}
 
         <div className="mt-10">
           <h2 className="text-lg font-semibold mb-4">Products</h2>
           <div className="flex flex-col gap-5">
-            {products.map((product) => (
-              <div key={product._id} className="flex justify-between items-end border-2 p-1 gap-5">
-                {product.image?.[0] && (
-                  <img
-                    src={product.image[0]}
-                    alt={product.name}
-                    className="w-20 h-20 object-cover"
-                  />
-                )}
-                <h3 className="font-bold text-xl">{product.name}</h3>
-                <p className="text-l font-semibold">₹ {product.price}</p>
-                <p className="text-sm">Stock: {product.stock}</p>
-                <div className="flex gap-2 mt-2">
-  <button
-    onClick={() => handleEdit(product)}
-    className="bg-yellow-500 cursor-pointer text-white px-3 py-1 rounded text-sm hover:bg-yellow-600">Edit</button>
-  <button
-    onClick={() => handleDelete(product._id)}
-    className="bg-red-500 cursor-pointer text-white px-3 py-1 rounded text-sm hover:bg-red-600">Delete</button>
+          {products.map((product) => {
+  const isSelected = selectedProductId === product._id;
+  return (
+    <div
+      key={product._id}
+      onClick={() =>
+        setSelectedProductId((prevId) => (prevId === product._id ? null : product._id))
+      }
+      className={`cursor-pointer border-[1px] p-3 rounded-md transition-all duration-300 hover:shadow-lg ${
+        isSelected ? "bg-gray-100" : ""
+      }`}
+    >
+      <div className="flex items-center gap-4">
+        {product.image?.[0] && (
+          <img src={product.image[0]} alt={product.name} className="w-20 h-20 object-cover" />
+        )}
+        <div>
+          <h3 className="font-bold text-lg">{product.name}</h3>
+          <p className="text-gray-600">₹ {product.price}</p>
         </div>
-            </div>   
-            ))}
+      </div>
+
+      {isSelected && (
+        <div className="mt-3">
+          <p className="text-sm">Stock: {product.stock}</p>
+          <div className="flex gap-2 mt-2">
+          <button
+  onClick={(e) => {
+    e.stopPropagation();
+    handleEdit(product);
+  }}
+  className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 disabled:opacity-50"
+  disabled={loadingAction}
+>
+  Edit
+</button>
+<button
+  onClick={(e) => {
+    e.stopPropagation();
+    handleDelete(product._id);
+  }}
+  className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 disabled:opacity-50"
+  disabled={loadingAction}
+>
+  {loadingAction ? "Deleting..." : "Delete"}
+</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+})}
+
           </div>   
         </div>
       </div>

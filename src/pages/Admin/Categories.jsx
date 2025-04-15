@@ -46,7 +46,7 @@ export const Categories = () => {
 
   return (
     <AdminDashboard>
-      <div className="m-5">
+      <div className="my-5">
         <div className="flex justify-between items-center mb-5">
           <div>
             <h1 className="text-xl font-semibold">Categories</h1>
@@ -67,7 +67,7 @@ export const Categories = () => {
             type="submit"
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
-            Add Category
+            Add
           </button>
         </form>
 

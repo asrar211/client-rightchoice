@@ -13,7 +13,7 @@ export const Register = () => {
     name: "",
     email: "",
     password: "",
-    phone: ""
+    phone: "",
   });
 
   const [status, setStatus] = useState(null); 
@@ -74,7 +74,7 @@ export const Register = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-sm my-20 mx-auto p-6 bg-white shadow-md rounded-xl"
+      className="max-w-sm my-20 mx-auto p-6 bg-white shadow-md rounded-xl transition-all transform hover:scale-105"
     >
       <h2 className="text-xl font-semibold mb-4 text-center">Create Account</h2>
 
@@ -85,7 +85,7 @@ export const Register = () => {
         value={form.name}
         onChange={handleChange}
         required
-        className="mb-3 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="mb-3 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
       />
       <input
         type="email"
@@ -94,7 +94,7 @@ export const Register = () => {
         value={form.email}
         onChange={handleChange}
         required
-        className="mb-3 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="mb-3 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
       />
       <input
         type="password"
@@ -104,7 +104,7 @@ export const Register = () => {
         min={6}
         onChange={handleChange}
         required
-        className="mb-3 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="mb-3 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
       />
       <input
         type="text"
@@ -114,22 +114,26 @@ export const Register = () => {
         value={form.phone}
         onChange={handleChange}
         required
-        className="mb-4 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="mb-4 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
       />
 
-      <button
+<button
         type="submit"
         disabled={authLoading}
         className={`w-full py-2 rounded text-white ${
-          authLoading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-        } transition`}
+          authLoading ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+        } transition-all duration-200 flex justify-center items-center gap-2`}
       >
-        {authLoading ? "Registering..." : "Sign Up"}
+        {authLoading ? (
+          <div className="animate-spin rounded-full border-t-2 border-white w-6 h-6" />
+        ) : (
+          "Sign Up"
+        )}
       </button>
 
       <p className="text-sm opacity-80 text-center mt-5">
         Already have an Account?{" "}
-        <Link className="text-blue-800 font-semibold" to="/login">
+        <Link className="text-blue-800 font-semibold" to="/">
           Login here
         </Link>
       </p>

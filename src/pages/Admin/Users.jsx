@@ -6,6 +6,8 @@ export const Users = () => {
     const [users, setUsers] = useState(null) 
     const [loading, setLoading] = useState(true) 
     const [error, setError] = useState(null)
+    const [selectedUserId, setSelectedUserId] = useState(null);
+
 
     useEffect(() => {
         axios.get('/api/auth')
@@ -25,32 +27,39 @@ export const Users = () => {
     return (
         <div>
             <AdminDashboard>
-                <div className="p-4">
-                    <h2 className="text-xl font-bold mb-4">Users List</h2>
-                    <p>Total Users: {users.length}</p>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white border border-gray-200">
-                            <thead>
-                                <tr className="bg-gray-100 text-left">
-                                    <th className="py-2 px-4 border-b">#</th>
-                                    <th className="py-2 px-4 border-b">Name</th>
-                                    <th className="py-2 px-4 border-b">Email</th>
-                                    <th className="py-2 px-4 border-b">Role</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {users && users.map((user, index) => (
-                                    <tr key={user.id} className="hover:bg-gray-50">
-                                        <td className="py-2 px-4 border-b">{index + 1}</td>
-                                        <td className="py-2 px-4 border-b">{user.name}</td>
-                                        <td className="py-2 px-4 border-b">{user.email}</td>
-                                        <td className="py-2 px-4 border-b">{user.isAdmin ? "Admin" : "User"}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div className="mt-10">
+  <h2 className="text-lg font-semibold mb-4">Users</h2>
+                <p>Total Users: {users.length}</p>
+  <div className="flex flex-col gap-5">
+    {users.map((user) => {
+      const isSelected = selectedUserId === user._id;
+
+      return (
+        <div
+          key={user._id}
+          onClick={() =>
+            setSelectedUserId((prevId) => (prevId === user._id ? null : user._id))
+          }
+          className={`cursor-pointer border p-3 rounded-md transition-all duration-300 hover:shadow-md ${
+            isSelected ? "bg-gray-100" : ""
+          }`}
+        >
+          <div>
+            <h3 className="font-bold text-lg">{user.name}</h3>
+            <p className="text-sm text-gray-600">Role: {user.isAdmin ? "Admin" : "User"}</p>
+          </div>
+
+          {isSelected && (
+            <div className="mt-3 text-sm text-gray-700 space-y-1">
+              <p>Email: {user.email}</p>
+              <p>Phone: {user.phone}</p>
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+</div>
             </AdminDashboard>
         </div>
     )

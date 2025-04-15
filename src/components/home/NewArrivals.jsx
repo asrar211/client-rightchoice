@@ -40,19 +40,19 @@ export const NewArrivals = () => {
         className="relative"
       >
         {visibleProducts.map((product) => (
-          <div key={product.id} className="flex px-5">
-            <div className="w-full h-full">
-              <img
-                className="object-cover shadow-2xl object-center rounded-xl h-60 transition-all duration-500 ease-in-out"
-                src={product.image}
-                alt={product.name}
-              />
-              <div className="flex flex-col justify-start items-start ml-2">
-                <h3 className="grot text-[1rem] mt-1">{product.name}</h3>
-                <p className="text-bold grot text-xl">{product.price}</p>
-              </div>
+          <Link to={`/product/${product._id}`} key={product._id} className="flex px-5">
+          <div className="w-full h-full">
+            <img
+              className="object-cover shadow-2xl object-center rounded-xl h-60 transition-all duration-500 ease-in-out"
+              src={product.image}
+              alt={product.name}
+            />
+            <div className="flex flex-col justify-start items-start ml-2">
+              <h3 className="grot text-[1rem] mt-1">{product.name}</h3>
+              <p className="text-bold grot text-xl">${product.price}</p>
             </div>
           </div>
+        </Link>
         ))}
       </Carousel>
 

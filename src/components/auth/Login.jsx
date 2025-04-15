@@ -34,7 +34,7 @@ export const Login = () => {
   };
 
   useEffect(() => {
-    if (!pendingStatus || toastCount >= 3|| queueNextToast) return;
+    if (!pendingStatus || toastCount >= 3 || queueNextToast) return;
 
     if (pendingStatus === "success") {
       toast.success("🎉 Login successful!", {
@@ -68,42 +68,60 @@ export const Login = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-sm my-20 mx-auto p-6 bg-white shadow-md rounded-xl"
+      className="max-w-sm my-20 mx-auto p-6 bg-white shadow-lg rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105"
     >
-      <h2 className="text-xl font-semibold mb-4 text-center">Login</h2>
+      <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">Login</h2>
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Your Email"
-        value={form.email}
-        onChange={handleChange}
-        required
-        className="mb-3 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Your Password"
-        value={form.password}
-        onChange={handleChange}
-        required
-        className="mb-4 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+      <div className="mb-4">
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          className="mb-3 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
+        />
+        {/* Email Error Message */}
+        {error?.includes("email") && (
+          <p className="text-xs text-red-500">{error}</p>
+        )}
+      </div>
 
+      <div className="mb-6">
+        <input
+          type="password"
+          name="password"
+          placeholder="Your Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+          className="mb-3 border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
+        />
+        {/* Password Error Message */}
+        {error?.includes("password") && (
+          <p className="text-xs text-red-500">{error}</p>
+        )}
+      </div>
+
+      {/* Login Button */}
       <button
         type="submit"
         disabled={authLoading}
         className={`w-full py-2 rounded text-white ${
           authLoading ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-        } transition`}
+        } transition-all duration-200 flex justify-center items-center gap-2`}
       >
-        {authLoading ? "Logging In..." : "Log In"}
+        {authLoading ? (
+          <div className="animate-spin rounded-full border-t-2 border-white w-6 h-6" />
+        ) : (
+          "Log In"
+        )}
       </button>
 
       <p className="text-sm opacity-80 text-center mt-5">
         Don't have an Account?{" "}
-        <Link className="text-blue-800 font-semibold" to="/signup">
+        <Link className="text-blue-800 font-semibold hover:text-blue-900 transition-all" to="/signup">
           Signup here
         </Link>
       </p>
