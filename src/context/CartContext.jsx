@@ -22,8 +22,12 @@ export const CartProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchCart();
-  }, [!authLoading && user]);
+    if(!authLoading && user) {
+      fetchCart();
+    }else{
+      setCart(null);
+    }
+  }, [authLoading && user]);
 
   const addToCart = async (item) => {
     try {
