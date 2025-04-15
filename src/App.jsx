@@ -16,6 +16,7 @@ import { Categories } from './pages/Admin/Categories'
 import {CategoryProducts} from './pages/CategoryProducts'
 import {Shop} from './pages/Shop'
 import { ProductDetails } from './pages/ProductDetails'
+import { Cart } from './pages/Cart'
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path='/category/:id' element={<CategoryProducts/>}/>
         <Route path='/shop' element={<Shop/>}/>
         <Route path='/product/:id' element={<ProductDetails/>}/>
+        <Route path='/cart' element={<Cart/>}/>
 
         <Route path="/" element={<Home/>}/>
         <Route path="/profile" element={<PrivateRoutes><Profile/></PrivateRoutes>}/>
