@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../services/axios';
 import useCart from '../hooks/useCart';
-import { useNavigate } from 'react-router-dom';
-// import { toast } from 'react-hot-toast'; // Optional toast notification
+import { ToastContainer, toast } from 'react-toastify';
 
 export const ProductDetails = () => {
   const { id } = useParams();
@@ -22,6 +21,7 @@ export const ProductDetails = () => {
       }
     } catch (err) {
       console.error("Failed to fetch product", err);
+      toast.error("Failed to load product. Try again later.");
     }
   };
 
@@ -37,28 +37,36 @@ export const ProductDetails = () => {
       quantity: Number(quantity),
       image: product.image[0],
     });
-  
+
+    toast.success(`${product.name} added to cart!`);
     navigate("/cart");
   };
-  
 
-  if (!product) return <p className="text-center mt-10">Loading...</p>;
+  if (!product) {
+    return (
+      <div className="p-4 text-center mt-10 text-gray-600">
+        <p>Loading product details...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
+      <ToastContainer />
+
       <img
         src={mainImage}
         alt={product.name}
-        className="w-full bg-red-400 h-[300px] object-cover rounded-lg mb-4"
+        className="w-full h-[300px] object-cover rounded-lg mb-4 transition duration-300"
       />
 
-      <div className="flex gap-4 mb-4 overflow-x-auto">
+      <div className="flex gap-3 mb-4 overflow-x-auto">
         {product.image?.map((img, index) => (
           <img
             key={index}
             src={img}
             alt={`${product.name} ${index}`}
-            className={`w-20 h-20 object-cover rounded-md cursor-pointer border-[1px] ${
+            className={`w-20 h-20 object-cover rounded-md cursor-pointer border-2 transition duration-200 hover:opacity-80 ${
               img === mainImage ? "border-black" : "border-transparent"
             }`}
             onClick={() => setMainImage(img)}
@@ -67,20 +75,21 @@ export const ProductDetails = () => {
       </div>
 
       <h1 className="text-xl font-bold mt-4 uppercase">{product.name}</h1>
-      <p className="text-xl font-bold mt-5">
-        ${product.price}{" "}
+      <p className="text-xl font-bold mt-3">
+        ₹{product.price}{" "}
         <span className="opacity-40 line-through ml-2">
-          ${product.price + product.price * 0.4}
+          ₹{product.price + product.price * 0.4}
         </span>
       </p>
-      <p className="text-l opacity-60 font-light mt-2">{product.description}</p>
+      <p className="text-base text-gray-600 font-light mt-2">{product.description}</p>
       <hr className="border-t border-gray-300 my-4" />
 
       <div className="flex items-center justify-between gap-4 mt-6">
         <div className="flex items-center border border-gray-300 rounded-full px-4 py-2">
           <button
-            className="text-xl px-2"
+            className={`text-xl px-2 ${quantity === 1 ? "opacity-40 cursor-not-allowed" : ""}`}
             onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
+            disabled={quantity === 1}
           >
             −
           </button>
@@ -100,6 +109,7 @@ export const ProductDetails = () => {
           Add to Cart
         </button>
       </div>
+
       <hr className="border-t border-gray-300 my-4" />
     </div>
   );
